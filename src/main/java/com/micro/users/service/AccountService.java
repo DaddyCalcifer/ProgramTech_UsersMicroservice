@@ -5,6 +5,7 @@ import com.micro.users.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -25,6 +26,9 @@ public class AccountService {
     // Get user by ID
     public Optional<AccountDTO> getUserById(Long id) {
         return accountRepository.findById(id);
+    }
+    public Optional<Long> getUserRoleById(Long id) {
+        return accountRepository.getRoleById(id);
     }
 
     // Update user
@@ -54,7 +58,24 @@ public class AccountService {
     }
 
     // Delete user
-    public void deleteUser(Long id) {
-        accountRepository.deleteById(id);
+    public boolean deleteUser(Long id) {
+        try {
+            accountRepository.deleteSoftById(id);
+        }catch (Exception ex){
+            System.out.println("Request error: " + ex.getMessage());
+            return false;
+        }
+        accountRepository.setUpdatedAtById(id,LocalDateTime.now());
+        return true;
+    }
+    public boolean recoverUser(Long id) {
+        try {
+            accountRepository.recoverUserById(id);
+        }catch (Exception ex){
+            System.out.println("Request error: " + ex.getMessage());
+            return false;
+        }
+        accountRepository.setUpdatedAtById(id,LocalDateTime.now());
+        return true;
     }
 }

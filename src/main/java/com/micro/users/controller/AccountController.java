@@ -33,15 +33,29 @@ public class AccountController {
             return ResponseEntity.ok(users);
         }
     }
+    @GetMapping("/users:role/{id}")
+    public ResponseEntity<Long> getUserRoleById(@PathVariable Long id) {
+        Optional<Long> user_roleOptional = accountService.getUserRoleById(id);
+        return user_roleOptional.map(role -> new ResponseEntity<>(role, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @PostMapping("/users/add")
     public ResponseEntity<AccountDTO> createUser(@RequestBody AccountDTO user) {
         AccountDTO createdUser = accountService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
-    @PostMapping("/users/delete/{id}")
-    public String deleteUserById(@PathVariable Long id) {
-        accountService.deleteUser(id);
-        return "deleted";
+    @PatchMapping("/users/delete/{id}")
+    public ResponseEntity<AccountDTO> deleteUserById(@PathVariable Long id) {
+        if(accountService.deleteUser(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body(accountService.getUserById(id).get());
+        }
+        else return ResponseEntity.notFound().build();
     }
-
+    @PatchMapping("/users/recover/{id}")
+    public ResponseEntity<AccountDTO> recoverUserById(@PathVariable Long id) {
+        if(accountService.recoverUser(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body(accountService.getUserById(id).get());
+        }
+        else return ResponseEntity.notFound().build();
+    }
 }
