@@ -3,6 +3,8 @@ package com.micro.users.service;
 import com.micro.users.model.AccountDTO;
 import com.micro.users.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,17 +17,17 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    // Create a new user
     public AccountDTO createUser(AccountDTO user) {
         return accountRepository.save(user);
     }
 
-    // Get all users
     public List<AccountDTO> getAllUsers() {
         return accountRepository.findAll();
     }
+    public Page<AccountDTO> getAllUsers(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
 
-    // Get user by ID
     public Optional<AccountDTO> getUserById(UUID id) {
         return accountRepository.findById(id);
     }
@@ -33,7 +35,6 @@ public class AccountService {
         return accountRepository.getRoleById(id);
     }
 
-    // Update user
     public AccountDTO updateUser(UUID id, AccountDTO userDetails) {
         Optional<AccountDTO> user = accountRepository.findById(id);
         if (user.isPresent()) {
@@ -54,12 +55,10 @@ public class AccountService {
         return null;
     }
 
-    // Delete all users
     public void deleteAllUsers() {
         accountRepository.deleteAll();
     }
 
-    // Delete user
     public boolean deleteUser(UUID id) {
         try {
             accountRepository.deleteSoftById(id);

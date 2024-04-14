@@ -2,9 +2,14 @@ package com.micro.users.controller;
 
 import com.micro.users.model.AccountDTO;
 import com.micro.users.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,15 +30,20 @@ public class AccountController {
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    //Добавил пагинацию для оптимизации памяти при большом количестве записей в бд [14.04]
     @GetMapping("/users")
-    public ResponseEntity<List<AccountDTO>> getAllUsers() {
-        List<AccountDTO> users = accountService.getAllUsers();
-        if (users.isEmpty()) {
+    public ResponseEntity<List<AccountDTO>> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AccountDTO> usersPage = accountService.getAllUsers(pageable);
+
+        if (usersPage.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(users);
+            return ResponseEntity.ok(usersPage.getContent());
         }
     }
+
     @GetMapping("/users:role/{id}")
     public ResponseEntity<Long> getUserRoleById(@PathVariable UUID id) {
         Optional<Long> user_roleOptional = accountService.getUserRoleById(id);
@@ -41,8 +51,13 @@ public class AccountController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PostMapping("/users/add")
-    public ResponseEntity<AccountDTO> createUser(@RequestBody AccountDTO user) {
-        AccountDTO createdUser = accountService.createUser(user);
+    public ResponseEntity<AccountDTO> createUser(@Valid @RequestBody AccountDTO request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // Обработка ошибок валидации
+            return ResponseEntity.badRequest().build();
+        }
+
+        AccountDTO createdUser = accountService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
     @PatchMapping("/users/delete/{id}")
