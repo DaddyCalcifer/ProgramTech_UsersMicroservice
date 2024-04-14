@@ -10,23 +10,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface AccountRepository extends JpaRepository<AccountDTO, Long> {
+public interface AccountRepository extends JpaRepository<AccountDTO, UUID> {
     @Transactional
     @Modifying
     @Query("UPDATE AccountDTO a SET a.isDeleted = true WHERE a.id = :id AND a.isDeleted = false")
-    void deleteSoftById(@Param("id") Long id);
+    void deleteSoftById(@Param("id") UUID id);
     @Query("SELECT role FROM AccountDTO WHERE id = :id")
-    Optional<Long> getRoleById(@Param("id") Long id);
+    Optional<Long> getRoleById(@Param("id") UUID id);
 
     @Transactional
     @Modifying
     @Query("UPDATE AccountDTO a SET a.updatedAt = :upd WHERE a.id = :id")
-    void setUpdatedAtById(@Param("id") Long id, @Param("upd") LocalDateTime updatedAt);
+    void setUpdatedAtById(@Param("id") UUID id, @Param("upd") LocalDateTime updatedAt);
 
     @Transactional
     @Modifying
     @Query("UPDATE AccountDTO a SET a.isDeleted = false WHERE a.id = :id AND a.isDeleted = true")
-    void recoverUserById(@Param("id") Long id);
+    void recoverUserById(@Param("id") UUID id);
 }

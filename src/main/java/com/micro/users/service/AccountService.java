@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class AccountService {
     @Autowired
@@ -24,15 +26,15 @@ public class AccountService {
     }
 
     // Get user by ID
-    public Optional<AccountDTO> getUserById(Long id) {
+    public Optional<AccountDTO> getUserById(UUID id) {
         return accountRepository.findById(id);
     }
-    public Optional<Long> getUserRoleById(Long id) {
+    public Optional<Long> getUserRoleById(UUID id) {
         return accountRepository.getRoleById(id);
     }
 
     // Update user
-    public AccountDTO updateUser(Long id, AccountDTO userDetails) {
+    public AccountDTO updateUser(UUID id, AccountDTO userDetails) {
         Optional<AccountDTO> user = accountRepository.findById(id);
         if (user.isPresent()) {
             AccountDTO existingUser = user.get();
@@ -58,7 +60,7 @@ public class AccountService {
     }
 
     // Delete user
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(UUID id) {
         try {
             accountRepository.deleteSoftById(id);
         }catch (Exception ex){
@@ -68,7 +70,7 @@ public class AccountService {
         accountRepository.setUpdatedAtById(id,LocalDateTime.now());
         return true;
     }
-    public boolean recoverUser(Long id) {
+    public boolean recoverUser(UUID id) {
         try {
             accountRepository.recoverUserById(id);
         }catch (Exception ex){
