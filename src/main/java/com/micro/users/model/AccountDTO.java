@@ -16,7 +16,7 @@ import jakarta.validation.constraints.*;
 public class AccountDTO {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, unique = true)
     private UUID id;
 
     public AccountDTO() {
@@ -44,7 +44,7 @@ public class AccountDTO {
     @NotNull
     @NotBlank
     @Email
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @NotNull
@@ -59,16 +59,6 @@ public class AccountDTO {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @NotNull
-    @Column(name = "role")
-    private Integer role;
-
-    @Column(name = "activity_status")
-    private Integer activityStatus;
-
     @Column(name = "is_deleted")
     private boolean isDeleted;
-
-    @Column(name = "current_event")
-    private int currentEvent;
 }

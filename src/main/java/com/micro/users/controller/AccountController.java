@@ -43,13 +43,6 @@ public class AccountController {
             return ResponseEntity.ok(usersPage.getContent());
         }
     }
-
-    @GetMapping("/users:role/{id}")
-    public ResponseEntity<Long> getUserRoleById(@PathVariable UUID id) {
-        Optional<Long> user_roleOptional = accountService.getUserRoleById(id);
-        return user_roleOptional.map(role -> new ResponseEntity<>(role, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
     @PostMapping("/users/add")
     public ResponseEntity<AccountDTO> createUser(@Valid @RequestBody AccountDTO request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

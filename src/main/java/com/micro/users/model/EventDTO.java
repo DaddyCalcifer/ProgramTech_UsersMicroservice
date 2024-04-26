@@ -37,4 +37,7 @@ public class EventDTO {
 
     @Column(name = "organizer", nullable = false)
     private UUID organizer;
+
+    @Column(name = "place", nullable = true)
+    private String place;
 }

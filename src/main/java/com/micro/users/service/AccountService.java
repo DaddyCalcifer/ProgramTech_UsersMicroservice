@@ -31,9 +31,6 @@ public class AccountService {
     public Optional<AccountDTO> getUserById(UUID id) {
         return accountRepository.findById(id);
     }
-    public Optional<Long> getUserRoleById(UUID id) {
-        return accountRepository.getRoleById(id);
-    }
 
     public AccountDTO updateUser(UUID id, AccountDTO userDetails) {
         Optional<AccountDTO> user = accountRepository.findById(id);
@@ -44,10 +41,7 @@ public class AccountService {
             existingUser.setEmail(userDetails.getEmail());
             existingUser.setSurname(userDetails.getSurname());
             existingUser.setPasswordHash(userDetails.getPasswordHash());
-            existingUser.setRole(userDetails.getRole());
-            existingUser.setActivityStatus(userDetails.getActivityStatus());
             existingUser.setDeleted(userDetails.isDeleted());
-            existingUser.setCurrentEvent(userDetails.getCurrentEvent());
             existingUser.setCreatedAt(userDetails.getCreatedAt());
             existingUser.setUpdatedAt(userDetails.getUpdatedAt());
             return accountRepository.save(existingUser);

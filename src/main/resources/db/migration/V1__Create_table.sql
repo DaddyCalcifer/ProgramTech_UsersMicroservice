@@ -7,8 +7,5 @@ CREATE TABLE IF NOT EXISTS accounts (
     password_hash varchar(255) NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    role int NOT NULL DEFAULT 1,
-    activity_status int NOT NULL DEFAULT 0,
-    is_deleted boolean NOT NULL DEFAULT false,
-    current_event integer not null default 0
+    is_deleted boolean NOT NULL DEFAULT false
 )
