@@ -37,4 +37,9 @@ public class EventService {
     public EventParticipantDTO addEventPart(EventParticipantDTO eventPart) {
         return eventPartRepository.save(eventPart);
     }
+    public Integer getPartCountInEvent(UUID id)
+    {
+        EventDTO event = eventRepository.findById(id).get();
+        return eventPartRepository.getParticipantsInEventCount(event);
+    }
 }

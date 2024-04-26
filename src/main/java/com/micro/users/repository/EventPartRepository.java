@@ -23,4 +23,6 @@ public interface EventPartRepository extends JpaRepository<EventParticipantDTO, 
     @Query("INSERT INTO EventParticipantDTO (id, event, account, status) \n" +
             "VALUES (:id,:event_id, :account_id, :status)")
     void joinToEvent(@Param("id") EventPartPK id, @Param("event_id") EventDTO event_id, @Param("account_id") AccountDTO account_id, @Param("status") int status);
+    @Query("SELECT COUNT(*) FROM EventParticipantDTO WHERE event = :event")
+    Integer getParticipantsInEventCount(@Param("event") EventDTO event);
 }

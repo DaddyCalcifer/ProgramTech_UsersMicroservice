@@ -91,4 +91,10 @@ public class EventController {
         eventService.addEventPart(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
+    @GetMapping("/events/participants:count/{id}")
+    public ResponseEntity<Integer> getPartCountInEvent(@PathVariable UUID id) {
+        Integer count = eventService.getPartCountInEvent(id);
+
+        return ResponseEntity.ok(count);
+    }
 }
