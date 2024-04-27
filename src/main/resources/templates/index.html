@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Page</title>
+</head>
+<body>
+    <h1 th:text="'Фамилия: ' + ${surname}"></h1>
+    <h1 th:text="'Имя: ' + ${name}"></h1>
+    <h1 th:text="'Отчество: ' + ${patron}"></h1>
+    <h1 th:text="'E-mail: ' + ${email}"></h1>
+    <h1 th:text="'Зарегестрирован: ' + ${createdAt}"></h1>
+</body>
+</html>

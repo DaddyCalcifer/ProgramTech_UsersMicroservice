@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/users")
 public class AccountController {
     private final AccountService accountService;
     @Autowired
@@ -24,14 +25,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> getUserById(@PathVariable UUID id) {
         Optional<AccountDTO> userOptional = accountService.getUserById(id);
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     //Добавил пагинацию для оптимизации памяти при большом количестве записей в бд [14.04]
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<AccountDTO>> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -43,14 +44,7 @@ public class AccountController {
             return ResponseEntity.ok(usersPage.getContent());
         }
     }
-
-    @GetMapping("/users:role/{id}")
-    public ResponseEntity<Long> getUserRoleById(@PathVariable UUID id) {
-        Optional<Long> user_roleOptional = accountService.getUserRoleById(id);
-        return user_roleOptional.map(role -> new ResponseEntity<>(role, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-    @PostMapping("/users/add")
+    @PostMapping("/add")
     public ResponseEntity<AccountDTO> createUser(@Valid @RequestBody AccountDTO request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // Обработка ошибок валидации
@@ -60,14 +54,14 @@ public class AccountController {
         AccountDTO createdUser = accountService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
-    @PatchMapping("/users/delete/{id}")
+    @PatchMapping("/delete/{id}")
     public ResponseEntity<AccountDTO> deleteUserById(@PathVariable UUID id) {
         if(accountService.deleteUser(id)) {
             return ResponseEntity.status(HttpStatus.OK).body(accountService.getUserById(id).get());
         }
         else return ResponseEntity.notFound().build();
     }
-    @PatchMapping("/users/recover/{id}")
+    @PatchMapping("/recover/{id}")
     public ResponseEntity<AccountDTO> recoverUserById(@PathVariable UUID id) {
         if(accountService.recoverUser(id)) {
             return ResponseEntity.status(HttpStatus.OK).body(accountService.getUserById(id).get());

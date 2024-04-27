@@ -18,8 +18,6 @@ public interface AccountRepository extends JpaRepository<AccountDTO, UUID> {
     @Modifying
     @Query("UPDATE AccountDTO a SET a.isDeleted = true WHERE a.id = :id AND a.isDeleted = false")
     void deleteSoftById(@Param("id") UUID id);
-    @Query("SELECT role FROM AccountDTO WHERE id = :id")
-    Optional<Long> getRoleById(@Param("id") UUID id);
 
     @Transactional
     @Modifying
