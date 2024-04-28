@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            height: 10px;
+        }
+
+        .header {
+            background-color: #20a5b2;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px;
+        }
+        .header a:hover {
+            color: #20a5b2;
+            border-radius: 10px;
+            background-color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .btn-edit {
+            background-color: #20a5b2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .btn-edit:hover {
+            background-color: #1d909b;
+        }
+        .input-field {
+            display: block;
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Название сервиса</h1>
+    <a href="#">Профиль</a>
+    <a href="#">Мероприятия</a>
+    <a href="#">Пользователи</a>
+</div>
+
+<div class="container">
+    <h2>Данные пользователя</h2>
+    <label for="surname">Фамилия:</label>
+    <input id="surname" class="input-field" type="text" th:value="${surname}">
+    <label for="name">Имя:</label>
+    <input id="name" class="input-field" type="text" th:value="${name}">
+    <label for="patron">Отчество:</label>
+    <input id="patron" class="input-field" type="text" th:value="${patron}">
+    <label for="email">E-mail:</label>
+    <input id="email" class="input-field" type="text" th:value="${email}">
+    <button class="btn-edit">Сохранить изменения</button>
+</div>
+</body>
+</html>

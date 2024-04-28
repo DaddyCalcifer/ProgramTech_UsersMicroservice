@@ -31,7 +31,7 @@
         }
 
         .header {
-            background-color: #333;
+            background-color: #20a5b2;
             color: #fff;
             padding: 10px;
             text-align: center;
@@ -42,6 +42,31 @@
             color: #fff;
             text-decoration: none;
             margin: 0 10px;
+            padding: 5px;
+        }
+        .header a:hover {
+            color: #20a5b2;
+            border-radius: 10px;
+            background-color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .btn-edit {
+            background-color: #20a5b2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .btn-edit:hover {
+            background-color: #1d909b;
         }
     </style>
 </head>
@@ -61,6 +86,7 @@
     <p th:text="'Отчество: ' + ${patron}"></p>
     <p th:text="'E-mail: ' + ${email}"></p>
     <p th:text="'Зарегистрирован: ' + ${createdAt}"></p>
+    <button onclick="window.location.href = window.location.href + '/edit';" class="btn-edit">Редактировать</a>
 </div>
 </body>
 </html>

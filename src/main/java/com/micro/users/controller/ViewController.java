@@ -25,7 +25,16 @@ public class ViewController {
         model.addAttribute("patron", user.getPatron());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("createdAt", user.getCreatedAt().toString().replace("T","\t"));
-        return "index";
+        return "user";
+    }
+    @GetMapping("/user/{id}/edit")
+    public String userEdit(Model model,@PathVariable UUID id) {
+        AccountDTO user = accountService.getUserById(id).get();
+        model.addAttribute("surname", user.getSurname());
+        model.addAttribute("name", user.getFirstName());
+        model.addAttribute("patron", user.getPatron());
+        model.addAttribute("email", user.getEmail());
+        return "user_edit";
     }
     @GetMapping("/profile")
     public String userId(Model model) {
