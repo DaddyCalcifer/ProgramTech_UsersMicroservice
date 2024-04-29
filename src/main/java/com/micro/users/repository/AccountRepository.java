@@ -28,4 +28,18 @@ public interface AccountRepository extends JpaRepository<AccountDTO, UUID> {
     @Modifying
     @Query("UPDATE AccountDTO a SET a.isDeleted = false WHERE a.id = :id AND a.isDeleted = true")
     void recoverUserById(@Param("id") UUID id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE AccountDTO a SET " +
+            "a.firstName = :name, " +
+            "a.surname = :surname, " +
+            "a.patron = :patron, " +
+            "a.email = :email " +
+            "WHERE a.id = :id")
+    void updateUser(@Param("id") UUID id,
+                    @Param("name") String name,
+                    @Param("surname") String surname,
+                    @Param("patron") String patron,
+                    @Param("email") String email);
 }

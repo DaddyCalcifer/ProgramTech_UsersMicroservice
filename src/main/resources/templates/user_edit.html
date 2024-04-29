@@ -3,90 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <title>Редактирование</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script>
+        function sendPutRequest(url, body) {
+    // Создаем новый XMLHttpRequest объект
+    var xhr = new XMLHttpRequest();
+    // Устанавливаем метод запроса и URL
+    xhr.open("PUT", url, true);
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    // Устанавливаем заголовок Content-Type
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-        h2 {
-            color: #333;
-            margin-bottom: 10px;
+    // Устанавливаем обработчик события завершения запроса
+    xhr.onreadystatechange = function () {
+        // Проверяем, что запрос завершен успешно
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Действия при успешном завершении запроса
+            alert("Данные успешно обновлены.");
+        } else {
+            // Действия при ошибке
+            console.log("Ошибка при выполнении запроса");
         }
+    };
 
-        p {
-            color: #666;
-            height: 10px;
-        }
+    // Преобразуем объект body в JSON строку и отправляем её
+    xhr.send(JSON.stringify(body));
+}
+function sendBlockRequest(url) {
+    // Создаем новый XMLHttpRequest объект
+    var xhr = new XMLHttpRequest();
+    // Устанавливаем метод запроса и URL
+    xhr.open("PATCH", url, true);
 
-        .header {
-            background-color: #20a5b2;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 20px;
+    // Устанавливаем обработчик события завершения запроса
+    xhr.onreadystatechange = function () {
+        // Проверяем, что запрос завершен успешно
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Действия при успешном завершении запроса
+            alert("Пользователь заблокирован.");
+        } else {
+            // Действия при ошибке
+            console.log("Ошибка при выполнении запроса");
         }
+    };
+    xhr.send();
+}
 
-        .header a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 5px;
-        }
-        .header a:hover {
-            color: #20a5b2;
-            border-radius: 10px;
-            background-color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        .btn-edit {
-            background-color: #20a5b2;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin-top: 10px;
-        }
+// Получаем ссылку на кнопку "Сохранить изменения"
+var saveButton = document.getElementById("save_button");
 
-        .btn-edit:hover {
-            background-color: #1d909b;
-        }
-        .input-field {
-            display: block;
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-    </style>
+// Добавляем обработчик события на клик по кнопке
+function save_changes() {
+    // Получаем значения из полей ввода
+    var surname = document.getElementById("surname").value;
+    var name = document.getElementById("name").value;
+    var patron = document.getElementById("patron").value;
+    var email = document.getElementById("email").value;
+
+    // Формируем объект с данными
+    var body = {
+        firstName: name,
+        surname: surname,
+        patron: patron,
+        email: email
+    };
+
+    // URL, куда отправляется запрос
+    var parts = window.location.href.split("/");
+    var id = parts[parts.length - 2];
+    var url = "http://localhost:8080/api/users/update/" + id;
+
+    // Отправляем PUT запрос
+    if(confirm("Сохранить изменения?"))
+        sendPutRequest(url, body);
+}
+function doBlock()
+{
+    var parts = window.location.href.split("/");
+    var id = parts[parts.length - 2];
+    var url = "http://localhost:8080/api/users/delete/" + id;
+    if(confirm("Заблокировать пользователя?"))
+        sendBlockRequest(url);
+}
+function back()
+{
+    window.location.href = window.location.href.replace('/edit','');
+}
+    </script>
 </head>
 <body>
 <div class="header">
-    <h1>Название сервиса</h1>
+    <h1>Организация мероприятий</h1>
     <a href="#">Профиль</a>
     <a href="#">Мероприятия</a>
     <a href="#">Пользователи</a>
@@ -102,7 +109,9 @@
     <input id="patron" class="input-field" type="text" th:value="${patron}">
     <label for="email">E-mail:</label>
     <input id="email" class="input-field" type="text" th:value="${email}">
-    <button class="btn-edit">Сохранить изменения</button>
+    <button class="btn-block" onclick="doBlock()">Заблокировать</button><br>
+    <button class="btn-edit" onclick="save_changes()">Сохранить изменения</button>
+    <button class="btn-back" onclick="back()">Назад</button>
 </div>
 </body>
 </html>

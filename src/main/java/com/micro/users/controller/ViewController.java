@@ -20,21 +20,30 @@ public class ViewController {
     @GetMapping("/user/{id}")
     public String userId(Model model,@PathVariable UUID id) {
         AccountDTO user = accountService.getUserById(id).get();
-        model.addAttribute("surname", user.getSurname());
-        model.addAttribute("name", user.getFirstName());
-        model.addAttribute("patron", user.getPatron());
-        model.addAttribute("email", user.getEmail());
-        model.addAttribute("createdAt", user.getCreatedAt().toString().replace("T","\t"));
-        return "user";
+        if(user.isDeleted()) {
+            return "blocked";
+        } else {
+            model.addAttribute("surname", user.getSurname());
+            model.addAttribute("name", user.getFirstName());
+            model.addAttribute("patron", user.getPatron());
+            model.addAttribute("email", user.getEmail());
+            model.addAttribute("createdAt", user.getCreatedAt().toString().replace("T", "\t"));
+            model.addAttribute("updatedAt", user.getUpdatedAt().toString().replace("T", "\t"));
+            return "user";
+        }
     }
     @GetMapping("/user/{id}/edit")
     public String userEdit(Model model,@PathVariable UUID id) {
         AccountDTO user = accountService.getUserById(id).get();
-        model.addAttribute("surname", user.getSurname());
-        model.addAttribute("name", user.getFirstName());
-        model.addAttribute("patron", user.getPatron());
-        model.addAttribute("email", user.getEmail());
-        return "user_edit";
+        if(user.isDeleted()) {
+            return "blocked";
+        } else {
+            model.addAttribute("surname", user.getSurname());
+            model.addAttribute("name", user.getFirstName());
+            model.addAttribute("patron", user.getPatron());
+            model.addAttribute("email", user.getEmail());
+            return "user_edit";
+        }
     }
     @GetMapping("/profile")
     public String userId(Model model) {

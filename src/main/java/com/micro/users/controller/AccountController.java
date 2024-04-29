@@ -68,4 +68,12 @@ public class AccountController {
         }
         else return ResponseEntity.notFound().build();
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<AccountDTO> updateUser(@PathVariable UUID id, @RequestBody AccountDTO newData)
+    {
+        if(!accountService.getUserById(id).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(accountService.updateUser(id,newData));
+        }
+        else return ResponseEntity.notFound().build();
+    }
 }

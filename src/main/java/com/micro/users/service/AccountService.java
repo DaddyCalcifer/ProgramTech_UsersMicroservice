@@ -32,23 +32,6 @@ public class AccountService {
         return accountRepository.findById(id);
     }
 
-    public AccountDTO updateUser(UUID id, AccountDTO userDetails) {
-        Optional<AccountDTO> user = accountRepository.findById(id);
-        if (user.isPresent()) {
-            AccountDTO existingUser = user.get();
-            existingUser.setFirstName(userDetails.getFirstName());
-            existingUser.setPatron(userDetails.getPatron());
-            existingUser.setEmail(userDetails.getEmail());
-            existingUser.setSurname(userDetails.getSurname());
-            existingUser.setPasswordHash(userDetails.getPasswordHash());
-            existingUser.setDeleted(userDetails.isDeleted());
-            existingUser.setCreatedAt(userDetails.getCreatedAt());
-            existingUser.setUpdatedAt(userDetails.getUpdatedAt());
-            return accountRepository.save(existingUser);
-        }
-        return null;
-    }
-
     public void deleteAllUsers() {
         accountRepository.deleteAll();
     }
@@ -72,5 +55,20 @@ public class AccountService {
         }
         accountRepository.setUpdatedAtById(id,LocalDateTime.now());
         return true;
+    }
+    public AccountDTO updateUser(UUID id,AccountDTO newData)
+    {
+        try {
+            accountRepository.updateUser(id,
+                    newData.getFirstName(),
+                    newData.getSurname(),
+                    newData.getPatron(),
+                    newData.getEmail());
+            accountRepository.setUpdatedAtById(id,LocalDateTime.now());
+        } catch (Exception exception)
+        {
+            System.out.println("Request error: " + exception.getMessage());
+        }
+        return newData;
     }
 }
