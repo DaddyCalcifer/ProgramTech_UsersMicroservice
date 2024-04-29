@@ -25,7 +25,7 @@ public class AccountService {
         return accountRepository.findAll();
     }
     public Page<AccountDTO> getAllUsers(Pageable pageable) {
-        return accountRepository.findAll(pageable);
+        return accountRepository.getActiveUsers(pageable);
     }
 
     public Optional<AccountDTO> getUserById(UUID id) {
@@ -70,5 +70,9 @@ public class AccountService {
             System.out.println("Request error: " + exception.getMessage());
         }
         return newData;
+    }
+    public Integer getUsersCount()
+    {
+        return accountRepository.getUserCount();
     }
 }

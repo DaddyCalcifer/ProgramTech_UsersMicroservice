@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пользователи</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="header">
+        <h1>Организация мероприятий</h1>
+        <a href="#">Профиль</a>
+        <a href="#">Мероприятия</a>
+        <a href="/users">Пользователи</a>
+    </div>
+    <div id="users-container" class="users-container"></div>
+    <div id="pages-container" class="users-container" style="margin-top: 20px; margin-bottom: 20px;"></div>
+
+<script>
+    // Получение параметра "page" из адресной строки
+    const urlParams = new URLSearchParams(window.location.search);
+    const _page = urlParams.get('page') || 0; // Если параметр не указан, используется значение по умолчанию 1
+    const pageSize = 15; // Размер страницы
+
+    // Функция для загрузки данных о пользователях
+    function loadUsers(page) {
+        const url = `http://localhost:8080/api/users?page=${page}&size=${pageSize}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка HTTP: ' + response.status);
+                }
+                return response.json(); // Преобразование ответа в JSON
+            })
+            .then(users => {
+                const usersContainer = document.getElementById('users-container');
+                // Очистка контейнера перед добавлением новых пользователей
+                usersContainer.innerHTML = '';
+                // Проход по каждому пользователю и создание карточки
+                users.forEach(user => {
+                    const userCard = document.createElement('div');
+                    userCard.classList.add('user-card');
+
+                    // Заполнение информации о пользователе
+                    userCard.innerHTML = `
+                        <h3>${user.firstName} ${user.surname}</h3>
+                        <p>Email: ${user.email}</p>
+                        <button class="btn-edit" onclick="viewProfile('${user.id}')">Просмотр профиля</button>
+                    `;
+
+                    // Добавление карточки в контейнер
+                    usersContainer.appendChild(userCard);
+                });
+            })
+            .catch(error => console.error('Ошибка загрузки пользователей:', error));
+    }
+function loadPages() {
+    // Запрос на получение данных о пользователях
+    fetch('http://localhost:8080/api/users/count')
+    .then(response => response.json())
+    .then(data => {
+        const numberData = Number(data); // Преобразование данных в число
+        const container = document.getElementById('pages-container');
+
+        if(numberData > pageSize){
+        // Цикл для создания ссылок на страницы
+        for (let page = 0; page < numberData/pageSize; page++) {
+                    const link = document.createElement('a');
+                    link.href = `?page=${page}`;
+                    link.textContent = `${page+1}`;
+                    link.className = 'pageLink';
+                    if(page ==_page)
+                        link.style = 'background-color: #1d909b;';
+
+                    // Добавление ссылки в контейнер
+                    container.appendChild(link);
+                }
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+
+    // Функция для перехода к профилю выбранного пользователя
+    function viewProfile(userId) {
+        window.location.href = `http://localhost:8080/users/${userId}`;
+    }
+
+    // Загрузка данных о пользователях при загрузке страницы
+    loadPages();
+    loadUsers(_page);
+</script>
+</body>
+</html>

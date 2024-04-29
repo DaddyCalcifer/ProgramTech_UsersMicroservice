@@ -76,4 +76,9 @@ public class AccountController {
         }
         else return ResponseEntity.notFound().build();
     }
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getUsersCount() {
+        Integer count = accountService.getUsersCount();
+        return ResponseEntity.ok(count);
+    }
 }

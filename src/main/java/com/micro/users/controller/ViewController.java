@@ -17,7 +17,7 @@ public class ViewController {
     public ViewController(AccountService accountService) {
         this.accountService = accountService;
     }
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public String userId(Model model,@PathVariable UUID id) {
         AccountDTO user = accountService.getUserById(id).get();
         if(user.isDeleted()) {
@@ -32,7 +32,7 @@ public class ViewController {
             return "user";
         }
     }
-    @GetMapping("/user/{id}/edit")
+    @GetMapping("/users/{id}/edit")
     public String userEdit(Model model,@PathVariable UUID id) {
         AccountDTO user = accountService.getUserById(id).get();
         if(user.isDeleted()) {
@@ -45,8 +45,13 @@ public class ViewController {
             return "user_edit";
         }
     }
-    @GetMapping("/profile")
-    public String userId(Model model) {
-        return "index";
+    @GetMapping("/users")
+    public String userId(Model model,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "15") int size)
+    {
+        model.addAttribute("page",page);
+        model.addAttribute("size",size);
+        return "users";
     }
 }
