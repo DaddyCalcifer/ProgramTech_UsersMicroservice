@@ -18,6 +18,8 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     public AccountDTO createUser(AccountDTO user) {
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         return accountRepository.save(user);
     }
 

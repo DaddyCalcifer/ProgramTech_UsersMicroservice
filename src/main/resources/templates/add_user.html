@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление пользователя</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script>
+        function sendPostRequest(url, body) {
+    // Создаем новый XMLHttpRequest объект
+    var xhr = new XMLHttpRequest();
+    // Устанавливаем метод запроса и URL
+    xhr.open("POST", url, true);
+
+    // Устанавливаем заголовок Content-Type
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Устанавливаем обработчик события завершения запроса
+    xhr.onreadystatechange = function () {
+        // Проверяем, что запрос завершен успешно
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Действия при успешном завершении запроса
+            alert("Пользователь успешно добавлен.");
+        } else {
+            // Действия при ошибке
+            console.log("Ошибка при выполнении запроса");
+        }
+    };
+
+    // Преобразуем объект body в JSON строку и отправляем её
+    xhr.send(JSON.stringify(body));
+}
+function sendBlockRequest(url) {
+    // Создаем новый XMLHttpRequest объект
+    var xhr = new XMLHttpRequest();
+    // Устанавливаем метод запроса и URL
+    xhr.open("PATCH", url, true);
+
+    // Устанавливаем обработчик события завершения запроса
+    xhr.onreadystatechange = function () {
+        // Проверяем, что запрос завершен успешно
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Действия при успешном завершении запроса
+            alert("Пользователь заблокирован.");
+        } else {
+            // Действия при ошибке
+            console.log("Ошибка при выполнении запроса");
+        }
+    };
+    xhr.send();
+}
+
+// Получаем ссылку на кнопку "Сохранить изменения"
+var saveButton = document.getElementById("save_button");
+
+// Добавляем обработчик события на клик по кнопке
+function save_changes() {
+    // Получаем значения из полей ввода
+    var surname = document.getElementById("surname").value;
+    var name = document.getElementById("name").value;
+    var patron = document.getElementById("patron").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+
+    // Формируем объект с данными
+    var body = {
+        firstName: name,
+        surname: surname,
+        patron: patron,
+        email: email,
+        passwordHash: password
+    };
+
+    // URL, куда отправляется запрос
+    var url = "http://localhost:8080/api/users/add";
+
+    // Отправляем POST запрос
+    if(confirm("Добавить пользователя?"))
+        sendPostRequest(url, body);
+}
+function doBlock()
+{
+    var parts = window.location.href.split("/");
+    var id = parts[parts.length - 2];
+    var url = "http://localhost:8080/api/users/delete/" + id;
+    if(confirm("Заблокировать пользователя?"))
+        sendBlockRequest(url);
+}
+function back()
+{
+    window.location.href = window.location.href.replace('/edit','');
+}
+    </script>
+</head>
+<body>
+<div class="header">
+    <h1>Организация мероприятий</h1>
+    <a href="#">Профиль</a>
+    <a href="#">Мероприятия</a>
+    <a href="/users">Пользователи</a>
+</div>
+
+<div class="container">
+    <h2>Данные пользователя</h2>
+    <label for="surname">Фамилия:</label>
+    <input id="surname" class="input-field" type="text" th:value="${surname}">
+    <label for="name">Имя:</label>
+    <input id="name" class="input-field" type="text" th:value="${name}">
+    <label for="patron">Отчество:</label>
+    <input id="patron" class="input-field" type="text" th:value="${patron}">
+    <label for="email">E-mail:</label>
+    <input id="email" class="input-field" type="text" th:value="${email}">
+    <label for="password">Пароль:</label>
+    <input id="password" class="input-field" type="password" th:value="${password}">
+    <button class="btn-edit" onclick="save_changes()">Добавить пользователя</button>
+    <a class="btn-back" href="/users">Отмена</a>
+</div>
+</body>
+</html>

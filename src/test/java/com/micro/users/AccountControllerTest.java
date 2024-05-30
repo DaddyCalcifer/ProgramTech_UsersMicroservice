@@ -32,21 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class AccountControllerTest {
-
     private MockMvc mockMvc;
-
     @Mock
     private AccountService accountService;
-
     @InjectMocks
     private AccountController accountController;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
     }
-
     @Test
     public void testGetUserById() throws Exception {
         UUID userId = UUID.randomUUID();
@@ -100,7 +95,9 @@ public class AccountControllerTest {
 
         mockMvc.perform(post("/api/users/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"firstName\":\"John\", \"surname\":\"Doe\", \"lastName\":\"Smith\", \"email\":\"john.doe@example.com\", \"passwordHash\":\"password\", \"role\":1}"))
+                        .content("{\"firstName\":\"John\", \"surname\":\"Doe\"" +
+                                ", \"lastName\":\"Smith\", \"email\":\"john.doe@example.com\"," +
+                                " \"passwordHash\":\"password\", \"role\":1}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"));
@@ -151,7 +148,9 @@ public class AccountControllerTest {
 
         mockMvc.perform(put("/api/users/update/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"firstName\":\"John\", \"surname\":\"Doe\", \"lastName\":\"Smith\", \"email\":\"john.doe@example.com\", \"passwordHash\":\"password\", \"role\":1}"))
+                        .content("{\"firstName\":\"John\", \"surname\":\"Doe\"," +
+                                " \"lastName\":\"Smith\", \"email\":\"john.doe@example.com\"," +
+                                " \"passwordHash\":\"password\", \"role\":1}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.surname").value("Doe"));

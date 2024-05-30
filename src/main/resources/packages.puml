@@ -1,0 +1,89 @@
+@startuml
+
+package "com.micro.users" {
+        class UsersApplication {
+        -main() : void
+        }
+    package controller {
+        class AccountController {
+            +getUserById(UUID id) : ResponseEntity<AccountDTO>
+            +getAllUsers(int page, int size) : ResponseEntity<List<AccountDTO>>
+            +createUser(AccountDTO request, BindingResult bindingResult) : ResponseEntity<AccountDTO>
+            +deleteUserById(UUID id) : ResponseEntity<AccountDTO>
+            +recoverUserById(UUID id) : ResponseEntity<AccountDTO>
+            +updateUser(UUID id, AccountDTO newData) : ResponseEntity<AccountDTO>
+            +getUsersCount() : ResponseEntity<Integer>
+        }
+        class ViewController {
+        -AccountService accountService
+        +userId(Model model,@PathVariable UUID id) : String
+        +userEdit(Model model,@PathVariable UUID id) : String
+        userId(Model model,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "15") int size)
+
+        }
+    }
+
+    package model {
+        class AccountDTO {
+            UUID id
+            String firstName
+            String surname
+            String patron
+            String email
+            String passwordHash
+            LocalDateTime createdAt
+            LocalDateTime updatedAt
+            boolean isDeleted
+        }
+    }
+
+    package repository {
+        class AccountRepository {
+            +findById(UUID id) : Optional<AccountDTO>
+            +findAll(Pageable pageable) : Page<AccountDTO>
+            +save(AccountDTO account) : AccountDTO
+            +deleteById(UUID id) : void
+        }
+    }
+
+    package service {
+        class AccountService {
+            -AccountRepository accountRepository
+            +getUserById(UUID id) : Optional<AccountDTO>
+            +getAllUsers(Pageable pageable) : Page<AccountDTO>
+            +createUser(AccountDTO account) : AccountDTO
+            +deleteUser(UUID id) : boolean
+            +recoverUser(UUID id) : boolean
+            +updateUser(UUID id, AccountDTO newData) : AccountDTO
+            +getUsersCount() : int
+        }
+    }
+}
+
+
+package "test" {
+    package java {
+        package сom.micro.users {
+            class AccountControllerTest {
+            -testCreateUser() : void
+            -testGetUserById() : void
+            -testGetAllUsers() : void
+            -testDeleteUserById() : void
+            -testRecoverUserById() : void
+            -testUpdateUser () : void
+            }
+        }
+    }
+}
+
+' Define relationships
+AccountController --> AccountService : uses
+ViewController --> AccountService : uses
+AccountService --> AccountRepository : uses
+AccountRepository --> AccountDTO : operates on
+AccountController --> AccountDTO : operates on
+AccountControllerTest --> AccountController : uses
+
+@enduml

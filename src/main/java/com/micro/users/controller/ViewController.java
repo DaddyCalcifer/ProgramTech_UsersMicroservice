@@ -54,4 +54,9 @@ public class ViewController {
         model.addAttribute("size",size);
         return "users";
     }
+    @GetMapping("/users/add")
+    public String addUser()
+    {
+        return "add_user";
+    }
 }

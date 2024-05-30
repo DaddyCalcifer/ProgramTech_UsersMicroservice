@@ -1,0 +1,43 @@
+@startuml
+actor Админ
+
+participant Интерфейс
+participant AccountController
+participant AccountService
+participant AccountRepository
+participant "База данных"
+
+Админ -> Интерфейс: Открыть страницу списка пользователей
+Интерфейс -> AccountController: getAllAccounts()
+AccountController -> AccountService: getAllAccounts()
+AccountService -> AccountRepository: findAll()
+AccountRepository -> "База данных": Запрос данных всех пользователей
+"База данных" --> AccountRepository: Данные всех пользователей
+AccountRepository --> AccountService: Список пользователей
+AccountService --> AccountController: Список пользователей
+AccountController --> Интерфейс: Список пользователей
+Интерфейс -> Админ: Отобразить список пользователей
+
+Админ -> Интерфейс: Выбрать пользователя для просмотра деталей
+Интерфейс -> AccountController: getAccountById(id)
+AccountController -> AccountService: getAccountById(id)
+AccountService -> AccountRepository: findById(id)
+AccountRepository -> "База данных": Запрос данных пользователя по ID
+"База данных" --> AccountRepository: Данные пользователя
+AccountRepository --> AccountService: Данные пользователя
+AccountService --> AccountController: Данные пользователя
+AccountController --> Интерфейс: Данные пользователя
+Интерфейс -> Админ: Отобразить данные пользователя
+
+Админ -> Интерфейс: Выбрать действие (редактировать/заблокировать/разблокировать)
+Интерфейс -> AccountController: updateAccount(id, accountDTO)
+AccountController -> AccountService: updateAccount(id, accountDTO)
+AccountService -> AccountRepository: save(account)
+AccountRepository -> "База данных": Обновить данные пользователя
+"База данных" --> AccountRepository: Подтверждение обновления
+AccountRepository --> AccountService: Подтверждение обновления
+AccountService --> AccountController: Подтверждение обновления
+AccountController --> Интерфейс: Подтверждение обновления
+Интерфейс -> Админ: Показать сообщение о выполнении действия
+
+@enduml
